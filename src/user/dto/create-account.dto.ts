@@ -1,3 +1,4 @@
+// 사용자 생성 dto
 import { ArgsType, Field } from '@nestjs/graphql';
 
 @ArgsType()

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { CreateAccountInput } from './dto/create-account.dto';
 import { LoginInput, LoginOutput } from './dto/login-user.dto';
 import { UserOutput } from './dto/user-output.dto';
@@ -71,10 +71,7 @@ export class UserService {
 
   async deleteAccount(userId): Promise<UserOutput> {
     try {
-      const account = await this._usersRepository
-        .createQueryBuilder('user')
-        .where(`user.id = ${userId} AND user.deletedAt IS NULL`)
-        .getOne();
+      const account = await this.findById(userId);
       if (!account) {
         return { ok: false, error: 'The user is not exists.' };
       }
@@ -93,6 +90,6 @@ export class UserService {
   }
 
   async findById(id: number): Promise<User> {
-    return await this._usersRepository.findOne({ id });
+    return await this._usersRepository.findOne({ id, deletedAt: IsNull() });
   }
 }

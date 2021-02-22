@@ -1,12 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import {
-  CreateAccountInput,
-  CreateAccountOutput,
-} from './dto/create-account.dto';
-import { DeleteAccountOutput } from './dto/delete-account.dto';
+import { CreateAccountInput } from './dto/create-account.dto';
 import { LoginInput, LoginOutput } from './dto/login-user.dto';
+import { UserOutput } from './dto/user-output.dto';
 import { JwtService } from './jwt/jwt.service';
 import { User } from './user.model';
 
@@ -22,7 +19,7 @@ export class UserService {
   async createAccount({
     name,
     password,
-  }: CreateAccountInput): Promise<CreateAccountOutput> {
+  }: CreateAccountInput): Promise<UserOutput> {
     try {
       const sameUser = await this._usersRepository.findOne({
         name,
@@ -72,7 +69,7 @@ export class UserService {
     }
   }
 
-  async deleteAccount(userId): Promise<DeleteAccountOutput> {
+  async deleteAccount(userId): Promise<UserOutput> {
     try {
       const account = await this._usersRepository
         .createQueryBuilder('user')

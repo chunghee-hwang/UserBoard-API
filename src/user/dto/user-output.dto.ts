@@ -1,3 +1,5 @@
+// 사용자 정보 dto
+
 import {
   ObjectType,
   PartialType,

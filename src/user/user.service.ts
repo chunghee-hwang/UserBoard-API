@@ -16,6 +16,8 @@ export class UserService {
   ) {
     console.log('use this repository user', User);
   }
+
+  // 계정 생성
   async createAccount({
     name,
     password,
@@ -48,6 +50,7 @@ export class UserService {
     }
   }
 
+  // 로그인
   async loginUser({ name, password }: LoginInput): Promise<LoginOutput> {
     try {
       const account = await this._usersRepository.findOne({ name });
@@ -69,6 +72,7 @@ export class UserService {
     }
   }
 
+  // 계정 삭제
   async deleteAccount(userId): Promise<UserOutput> {
     try {
       const account = await this.findById(userId);
@@ -89,6 +93,7 @@ export class UserService {
     }
   }
 
+  // 아이디로 유저 정보 찾기
   async findById(id: number): Promise<User> {
     return await this._usersRepository.findOne({ id, deletedAt: IsNull() });
   }

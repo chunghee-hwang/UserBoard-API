@@ -4,11 +4,10 @@ import { Repository } from 'typeorm';
 import {
   CreateAccountInput,
   CreateAccountOutput,
-} from './dto/user.create-account.dto';
-import {
-  DeleteAccountInput,
-  DeleteAccountOutput,
-} from './dto/user.delete-account.dto';
+} from './dto/create-account.dto';
+import { DeleteAccountOutput } from './dto/delete-account.dto';
+import { LoginInput, LoginOutput } from './dto/login-user.dto';
+import { JwtService } from './jwt/jwt.service';
 import { User } from './user.model';
 
 @Injectable()
@@ -16,6 +15,7 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private _usersRepository: Repository<User>,
+    private readonly jwtService: JwtService,
   ) {
     console.log('use this repository user', User);
   }
@@ -51,13 +51,32 @@ export class UserService {
     }
   }
 
-  async deleteAccount({
-    id,
-  }: DeleteAccountInput): Promise<DeleteAccountOutput> {
+  async loginUser({ name, password }: LoginInput): Promise<LoginOutput> {
+    try {
+      const account = await this._usersRepository.findOne({ name });
+      if (!account) {
+        return { ok: false, error: 'The username or password is not correct.' };
+      }
+
+      const isPasswordCorrect: boolean = await account.checkPassword(password);
+      if (!isPasswordCorrect) {
+        return { ok: false, error: 'The username or password is not correct.' };
+      } else {
+        return { ok: true, token: this.jwtService.getToken(account.id) };
+      }
+    } catch (e) {
+      return {
+        ok: false,
+        error: 'Fail to login.',
+      };
+    }
+  }
+
+  async deleteAccount(userId): Promise<DeleteAccountOutput> {
     try {
       const account = await this._usersRepository
         .createQueryBuilder('user')
-        .where(`user.id = ${id} AND user.deletedAt IS NULL`)
+        .where(`user.id = ${userId} AND user.deletedAt IS NULL`)
         .getOne();
       if (!account) {
         return { ok: false, error: 'The user is not exists.' };
@@ -74,5 +93,9 @@ export class UserService {
         error: 'Fail to delete account.',
       };
     }
+  }
+
+  async findById(id: number): Promise<User> {
+    return await this._usersRepository.findOne({ id });
   }
 }

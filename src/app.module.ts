@@ -1,4 +1,9 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { UserModule } from './user/user.module';
 import { BoardModule } from './board/board.module';
 import { BoardService } from './board/board.service';
@@ -7,6 +12,7 @@ import { AppResolver } from './app/app.resolver';
 import { AppService } from './app/app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeormConfig } from './shared/util/typeOrmConfig';
+import { JwtMiddleware } from './user/jwt/jwt.middleware';
 
 @Module({
   imports: [
@@ -40,7 +46,7 @@ import { typeormConfig } from './shared/util/typeOrmConfig';
         };
 
         return {
-          context: ({ req }) => ({ req }),
+          context: ({ req }) => ({ user: req['user'] }),
           playground: true, // Allow playground in production
           introspection: true, // Allow introspection in production
           ...schemaModuleOptions,

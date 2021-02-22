@@ -41,11 +41,18 @@ type DeleteAccountOutput {
   ok: Boolean
 }
 
+type LoginOutput {
+  error: String
+  ok: Boolean!
+  token: String
+}
+
 type Query {
   hello(data: String): String!
 }
 
 type Mutation {
   createAccount(name: String!, password: String!): CreateAccountOutput!
-  deleteAccount(id: Float!): DeleteAccountOutput!
+  deleteAccount: DeleteAccountOutput!
+  loginUser(name: String!, password: String!): LoginOutput!
 }

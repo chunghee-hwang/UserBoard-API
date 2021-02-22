@@ -1,10 +1,7 @@
-import { Field, ObjectType, PartialType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { BoardOutput } from 'src/board/dto/get-boards.dto';
 import { BaseOutput } from 'src/shared/dto/base.output.dto';
-import { CreateAccountOutput } from 'src/user/dto/create-account.dto';
-
-@ObjectType()
-class UserOutput extends CreateAccountOutput {}
+import { UserOutput } from 'src/user/dto/user-output.dto';
 
 @ObjectType()
 export class SearchUserOrBoardsOutput extends BaseOutput {

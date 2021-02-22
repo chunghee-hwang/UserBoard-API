@@ -1,4 +1,4 @@
-import { Injectable, Query } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { BoardService } from 'src/board/board.service';
 import { GetBoardsOutput } from 'src/board/dto/get-boards.dto';
 import { User } from 'src/user/user.model';

@@ -40,12 +40,6 @@ type UserOutput {
   ok: Boolean
 }
 
-type LoginOutput {
-  error: String
-  ok: Boolean!
-  token: String
-}
-
 type CreateBoardOutput {
   error: String
   ok: Boolean
@@ -80,13 +74,6 @@ type ModifyBoardOutput {
   id: ID
   title: String
   content: String
-}
-
-type UserOutput {
-  id: ID
-  name: String
-  error: String
-  ok: Boolean
 }
 
 type SearchUserOrBoardsOutput {

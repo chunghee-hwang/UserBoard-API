@@ -1,3 +1,5 @@
+// 게시물 삭제 dto
+
 import { ArgsType, Field, ObjectType, PartialType } from '@nestjs/graphql';
 import { CreateBoardOutput } from './create-board.dto';
 

@@ -11,10 +11,6 @@ export class AppService {
     private readonly _boardService: BoardService,
     private readonly _userService: UserService,
   ) {}
-  getHello(data?: string): string {
-    if (data) return data;
-    return 'Hello World!';
-  }
 
   // 유저 아이디로 유저 정보나 유저가 작성한 게시물 검색
   async searchUserOrBoards(userId: number): Promise<SearchUserOrBoardsOutput> {

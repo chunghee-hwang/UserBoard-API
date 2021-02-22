@@ -19,7 +19,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "pretest:e2e": "nest build -p tsconfig.test.json && cp ./test/jest-e2e.json ./dist-test/test/",
-    "test:e2e": "jest --config ./dist-test/test/jest-e2e.json"
+    "test:e2e": "jest --config ./dist-test/test/jest-e2e.json --detectOpenHandles"
   },
   "dependencies": {
     "@nestjs/common": "^7.0.0",
@@ -38,7 +38,6 @@
     "typeorm": "^0.2.29"
   },
   "devDependencies": {
-    "@nestjs/cli": "^7.0.0",
     "@nestjs/schematics": "^7.0.0",
     "@nestjs/testing": "^7.0.0",
     "@types/dotenv": "^8.2.0",

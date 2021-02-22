@@ -1,5 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { BaseModel } from '../shared/base.model';
+import { BaseModel } from '../shared/model/base.model';
 import { User } from '../user/user.model';
 import { Column, Entity, ManyToOne } from 'typeorm';
 

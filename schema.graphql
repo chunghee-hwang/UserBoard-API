@@ -47,12 +47,52 @@ type LoginOutput {
   token: String
 }
 
+type CreateBoardOutput {
+  error: String
+  ok: Boolean
+  id: ID
+  title: String
+  content: String
+}
+
+type DeleteBoardOutput {
+  error: String
+  ok: Boolean
+  id: ID
+  title: String
+  content: String
+}
+
+type BoardOutput {
+  id: ID!
+  title: String!
+  content: String!
+}
+
+type GetBoardsOutput {
+  error: String
+  ok: Boolean!
+  boards: [BoardOutput!]
+}
+
+type ModifyBoardOutput {
+  error: String
+  ok: Boolean
+  id: ID
+  title: String
+  content: String
+}
+
 type Query {
   hello(data: String): String!
+  getBoards: GetBoardsOutput!
 }
 
 type Mutation {
   createAccount(name: String!, password: String!): CreateAccountOutput!
   deleteAccount: DeleteAccountOutput!
   loginUser(name: String!, password: String!): LoginOutput!
+  createBoard(title: String!, content: String!): CreateBoardOutput!
+  deleteBoard(id: Float!): DeleteBoardOutput!
+  modifyBoard(title: String, content: String, id: Float!): ModifyBoardOutput!
 }

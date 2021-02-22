@@ -27,24 +27,17 @@ type User {
   boards: [Board!]!
 }
 
-type CreateAccountOutput {
-  id: ID
-  name: String
-  error: String
-  ok: Boolean
-}
-
-type DeleteAccountOutput {
-  id: ID
-  name: String
-  error: String
-  ok: Boolean
-}
-
 type LoginOutput {
   error: String
   ok: Boolean!
   token: String
+}
+
+type UserOutput {
+  id: ID
+  name: String
+  error: String
+  ok: Boolean
 }
 
 type Query {
@@ -52,7 +45,7 @@ type Query {
 }
 
 type Mutation {
-  createAccount(name: String!, password: String!): CreateAccountOutput!
-  deleteAccount: DeleteAccountOutput!
+  createAccount(name: String!, password: String!): UserOutput!
+  deleteAccount: UserOutput!
   loginUser(name: String!, password: String!): LoginOutput!
 }

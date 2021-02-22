@@ -1,3 +1,5 @@
+// 게시물 생성 dto
+
 import {
   ArgsType,
   Field,

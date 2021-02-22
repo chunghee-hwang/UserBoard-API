@@ -76,10 +76,15 @@ type ModifyBoardOutput {
   content: String
 }
 
+type SearchUserOutput {
+  id: ID
+  name: String
+}
+
 type SearchUserOrBoardsOutput {
   error: String
   ok: Boolean!
-  user: UserOutput
+  user: SearchUserOutput
   boards: [BoardOutput!]
 }
 

@@ -13,6 +13,9 @@ import { AppService } from './app/app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeormConfig } from './shared/util/typeOrmConfig';
 import { JwtMiddleware } from './user/jwt/jwt.middleware';
+import { UserService } from './user/user.service';
+import { JwtService } from './user/jwt/jwt.service';
+import { JwtModule } from './user/jwt/jwt.module';
 
 @Module({
   imports: [
@@ -53,7 +56,17 @@ import { JwtMiddleware } from './user/jwt/jwt.middleware';
         };
       },
     }),
+    JwtModule.forRoot({
+      privateKey: 'test_private_key',
+    }),
   ],
-  providers: [AppService, BoardService, AppResolver],
+  providers: [AppService, BoardService, AppResolver, UserService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(JwtMiddleware).forRoutes({
+      path: '/graphql',
+      method: RequestMethod.POST,
+    });
+  }
+}

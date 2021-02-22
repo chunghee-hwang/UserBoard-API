@@ -83,8 +83,23 @@ type ModifyBoardOutput {
   content: String
 }
 
+type UserOutput {
+  id: ID
+  name: String
+  error: String
+  ok: Boolean
+}
+
+type SearchUserOrBoardsOutput {
+  error: String
+  ok: Boolean!
+  user: UserOutput
+  boards: [BoardOutput!]
+}
+
 type Query {
   hello(data: String): String!
+  searchUserOrBoards(userId: Float!): SearchUserOrBoardsOutput!
   getBoards: GetBoardsOutput!
 }
 

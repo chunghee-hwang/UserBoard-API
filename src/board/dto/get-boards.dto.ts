@@ -3,7 +3,7 @@ import { BaseOutput } from 'src/shared/dto/base.output.dto';
 import { Board } from '../board.model';
 
 @ObjectType()
-class BoardOutput extends PickType(Board, ['id', 'title', 'content']) {}
+export class BoardOutput extends PickType(Board, ['id', 'title', 'content']) {}
 
 @ObjectType()
 export class GetBoardsOutput extends BaseOutput {

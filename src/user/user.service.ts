@@ -13,9 +13,7 @@ export class UserService {
     @InjectRepository(User)
     private _usersRepository: Repository<User>,
     private readonly jwtService: JwtService,
-  ) {
-    console.log('use this repository user', User);
-  }
+  ) {}
 
   // 계정 생성
   async createAccount({

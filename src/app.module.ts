@@ -56,12 +56,16 @@ import { JwtModule } from './user/jwt/jwt.module';
         };
       },
     }),
+
+    // jwt module의 서명키 설정
     JwtModule.forRoot({
       privateKey: 'test_private_key',
     }),
   ],
   providers: [AppService, BoardService, AppResolver, UserService],
 })
+
+// graphql 요청 마다 사용자의 jwt token을 검사
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(JwtMiddleware).forRoutes({

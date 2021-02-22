@@ -16,6 +16,7 @@ export class AppService {
     return 'Hello World!';
   }
 
+  // 유저 아이디로 유저 정보나 유저가 작성한 게시물 검색
   async searchUserOrBoards(userId: number): Promise<SearchUserOrBoardsOutput> {
     try {
       const user: User = await this._userService.findById(userId);

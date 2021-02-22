@@ -1,3 +1,5 @@
+// 유저 아이디로 유저 정보나 유저가 작성한 게시물 검색 dto
+
 import { Field, ObjectType, OmitType } from '@nestjs/graphql';
 import { BoardOutput } from 'src/board/dto/get-boards.dto';
 import { BaseOutput } from 'src/shared/dto/base.output.dto';

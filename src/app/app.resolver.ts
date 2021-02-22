@@ -10,6 +10,7 @@ export class AppResolver {
     return this._appService.getHello(data);
   }
 
+  // 유저 아이디로 유저 정보나 유저가 작성한 게시물 검색
   @Query((_) => SearchUserOrBoardsOutput)
   async searchUserOrBoards(
     @Args('userId')

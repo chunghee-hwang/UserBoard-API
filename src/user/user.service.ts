@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Repository } from 'typeorm';
-import { CreateAccountInput } from './dto/create-account.dto';
+import { CreateUserInput } from './dto/create-user.dto';
 import { LoginInput, LoginOutput } from './dto/login-user.dto';
 import { UserOutput } from './dto/user-output.dto';
 import { JwtService } from './jwt/jwt.service';
@@ -16,10 +16,7 @@ export class UserService {
   ) {}
 
   // 계정 생성
-  async createAccount({
-    name,
-    password,
-  }: CreateAccountInput): Promise<UserOutput> {
+  async createUser({ name, password }: CreateUserInput): Promise<UserOutput> {
     try {
       const sameUser = await this._usersRepository.findOne({
         name,
@@ -43,7 +40,7 @@ export class UserService {
     } catch (e) {
       return {
         ok: false,
-        error: 'Fail to create account.',
+        error: 'Fail to create user.',
       };
     }
   }
@@ -51,16 +48,16 @@ export class UserService {
   // 로그인
   async loginUser({ name, password }: LoginInput): Promise<LoginOutput> {
     try {
-      const account = await this._usersRepository.findOne({ name });
-      if (!account) {
+      const user = await this._usersRepository.findOne({ name });
+      if (!user) {
         return { ok: false, error: 'The username or password is not correct.' };
       }
 
-      const isPasswordCorrect: boolean = await account.checkPassword(password);
+      const isPasswordCorrect: boolean = await user.checkPassword(password);
       if (!isPasswordCorrect) {
         return { ok: false, error: 'The username or password is not correct.' };
       } else {
-        return { ok: true, token: this.jwtService.getToken(account.id) };
+        return { ok: true, token: this.jwtService.getToken(user.id) };
       }
     } catch (e) {
       return {
@@ -71,22 +68,22 @@ export class UserService {
   }
 
   // 계정 삭제
-  async deleteAccount(userId): Promise<UserOutput> {
+  async deleteUser(userId): Promise<UserOutput> {
     try {
-      const account = await this.findById(userId);
-      if (!account) {
+      const user = await this.findById(userId);
+      if (!user) {
         return { ok: false, error: 'The user is not exists.' };
       }
-      account.deletedAt = new Date();
-      await this._usersRepository.save(account);
+      user.deletedAt = new Date();
+      await this._usersRepository.save(user);
       return {
         ok: true,
-        ...account,
+        ...user,
       };
     } catch (e) {
       return {
         ok: false,
-        error: 'Fail to delete account.',
+        error: 'Fail to delete user.',
       };
     }
   }

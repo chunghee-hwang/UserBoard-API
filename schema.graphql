@@ -95,8 +95,8 @@ type Query {
 }
 
 type Mutation {
-  createAccount(name: String!, password: String!): UserOutput!
-  deleteAccount: UserOutput!
+  createUser(name: String!, password: String!): UserOutput!
+  deleteUser: UserOutput!
   loginUser(name: String!, password: String!): LoginOutput!
   createBoard(title: String!, content: String!): CreateBoardOutput!
   deleteBoard(id: Float!): DeleteBoardOutput!

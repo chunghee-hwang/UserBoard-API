@@ -62,13 +62,16 @@ describe('AppController (e2e)', () => {
         return request(app.getHttpServer())
           .post('/graphql')
           .send({
-            query: `mutation {loginUser(name: "${user.name}", password: "${user.password}"){ token }}`,
+            query: `mutation {loginUser(name: "${user.name}", password: "${user.password}"){ token, user{id,name} }}`,
           })
           .expect(200)
           .expect(({ body }) => {
             const token = body.data.loginUser.token;
             expect(token).not.toBeNull();
+            expect(body.data.loginUser.user).not.toBeNull();
+            expect(body.data.loginUser.user.name).toBe(user.name);
             user.token = token;
+            user.id = body.data.loginUser.user.id;
           });
       });
 
@@ -138,80 +141,79 @@ describe('AppController (e2e)', () => {
               expect(body.data.modifyBoard.content).toBe(board.content);
             });
         });
-      });
-
-      describe('user can view boards', () => {
-        it('boards of user', () => {
-          return request(app.getHttpServer())
-            .post('/graphql')
-            .send({
-              query: `query {
-                getBoards(userName:"${user.name}"){
-                  ok,
-                  boards{
-                    title, content, author{
-                      name
+        describe('user can view boards', () => {
+          it('boards of user(by username)', () => {
+            return request(app.getHttpServer())
+              .post('/graphql')
+              .send({
+                query: `query {
+                  getBoards(userName:"${user.name}"){
+                    ok,
+                    boards{
+                      title, content, author{
+                        name
+                      }
                     }
                   }
-                }
-              }`,
-            })
-            .expect(200)
-            .expect(({ body }) => {
-              expect(body.data.getBoards.boards).toEqual(
-                expect.arrayContaining([
-                  expect.objectContaining({ author: { name: user.name } }),
-                ]),
-              );
-            });
-        });
+                }`,
+              })
+              .expect(200)
+              .expect(({ body }) => {
+                expect(body.data.getBoards.boards).toEqual(
+                  expect.arrayContaining([
+                    expect.objectContaining({ author: { name: user.name } }),
+                  ]),
+                );
+              });
+          });
 
-        it('search user or boards by id', () => {
-          const searchUserId = user.id;
-          return request(app.getHttpServer())
-            .post('/graphql')
-            .send({
-              query: `query {
-                searchUserOrBoards(userId: 25){
-                  user{
-                    name,id
-                  }, boards{
-                    id
-                    title
-                    content
+          it('search user or boards by id', () => {
+            const searchUserId = user.id;
+            return request(app.getHttpServer())
+              .post('/graphql')
+              .send({
+                query: `query {
+                  searchUserOrBoards(userId: ${searchUserId}){
+                    user{
+                      name,id
+                    }, boards{
+                      id
+                      title
+                      content
+                    }
                   }
-                }
-              }`,
-            })
-            .expect(200)
-            .expect(({ body }) => {
-              expect(body.data.searchUserOrBoards.user).toEqual(
-                expect.objectContaining({ name: user.name }),
-              );
-              expect(body.data.searchUserOrBoards.boards).toEqual(
-                expect.arrayContaining([
-                  expect.objectContaining({ title: board.title }),
-                ]),
-              );
-            });
+                }`,
+              })
+              .expect(200)
+              .expect(({ body }) => {
+                expect(body.data.searchUserOrBoards.user).toEqual(
+                  expect.objectContaining({ name: user.name }),
+                );
+                expect(body.data.searchUserOrBoards.boards).toEqual(
+                  expect.arrayContaining([
+                    expect.objectContaining({ title: board.title }),
+                  ]),
+                );
+              });
+          });
         });
-      });
 
-      describe('user can delete board', () => {
-        it('delete board', () => {
-          return request(app.getHttpServer())
-            .post('/graphql')
-            .set('token', `${user.token}`)
-            .send({
-              query: `mutation {
+        describe('user can delete board', () => {
+          it('delete board', () => {
+            return request(app.getHttpServer())
+              .post('/graphql')
+              .set('token', `${user.token}`)
+              .send({
+                query: `mutation {
                 deleteBoard(id:${board.id}){
                   id }
                 }`,
-            })
-            .expect(200)
-            .expect(({ body }) => {
-              expect(body.data.deleteBoard.id).toBe(board.id);
-            });
+              })
+              .expect(200)
+              .expect(({ body }) => {
+                expect(body.data.deleteBoard.id).toBe(board.id);
+              });
+          });
         });
       });
     });

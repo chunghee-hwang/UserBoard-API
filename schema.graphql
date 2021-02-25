@@ -61,14 +61,6 @@ type GetBoardsOutput {
   boards: [BoardOutput!]
 }
 
-type UserOutput {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime
-  name: String!
-}
-
 type SearchUserOrBoardsOutput {
   error: String
   ok: Boolean!
@@ -110,12 +102,6 @@ type ModifyBoardOutput {
   title: String
   content: String
   author: UserOutput
-}
-
-type LoginOutput {
-  error: String
-  ok: Boolean!
-  token: String
 }
 
 type LoginOutput {

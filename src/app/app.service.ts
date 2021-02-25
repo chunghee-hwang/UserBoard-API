@@ -45,7 +45,6 @@ export class AppService {
         };
       }
       const boards: Board[] = await this._boardService.findAllByAuthor(user);
-      console.log({ boards });
       return {
         ok: true,
         user,

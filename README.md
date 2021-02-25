@@ -1,25 +1,8 @@
-<p align="center">
-  <a href="https://flatgarden.imweb.me/" target="blank"><img src="https://cdn.imweb.me/thumbnail/20200527/8394b8cd5faa4.png" width="320" alt="hakhak Logo" /></a>
-</p>
+# UserBoard-API
 
-  <p align="center">입시 고민 메신저 학학이 서버 테스트 과제</p>
-  
+TypeORM + NestJS 미션
+
 ## Description
-
-[Nest](https://github.com/nestjs/nest)와 [TypeOrm](https://typeorm.io/#/)을 이용해서 grpahql 서버를 짜는 과제입니다.
-
-완성을 원하는 것이 아니라 코드 작성에 대한 과정 및 의도를 보려고 함이니 큰 부담 가지지 않으셔도 됩니다.
-
-src 내에 app, board, user 도메인이 존재하고
-test/app.e2e-spec.ts 안에 테스트에 맞춰 resolver와 service를 작성해주시면 됩니다.
-
-database는 docker-compose를 통해 가동하셔서 진행하시면 되고 docker-compose 서버 컨테이너는 prod 환경으로 진행됩니다.
-
-완료 기간은 1주일이내 완료해주시면 되고 해당 리포지토리를 clone하여 작성해주신 후
-
-origin 을 따로 추가해서 개인 리포의 repository url을 mail(tech@flatgarden.kr)로 보내주시면 됩니다.
-
-추가적으로 질문사항이나 궁금한 것이 있으면 [오픈채팅방](https://open.kakao.com/o/sULPN0Fc)에서 질문 바랍니다.
 
 - Before you start
 
@@ -75,6 +58,7 @@ $ docker-compose up server
 ```bash
 $ docker-compose up test
 ```
+
 ### Stops containers and removes containers, networks, volumes
 
 ```bash
@@ -221,12 +205,3 @@ test 케이스를 다양하게 작성하시면 가산점이 적용됩니다.
   - nest의 authguard를 사용할 수 있습니다.
 - 도메인 별로 브랜치를 나누어서 개발했을 경우
 - test case 를 직접 작성하였을 경우
-
-## Support
-
-[오픈채팅방](https://open.kakao.com/o/sULPN0Fc)
-
-## Stay in touch
-
-- mail - tech@flatgarden.kr
-- Website - [https://www.hakhak.io](https://www.hakhak.io)

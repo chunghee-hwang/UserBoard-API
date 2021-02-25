@@ -4,6 +4,7 @@ import { BaseModel } from '../shared/model/base.model';
 import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { InternalServerErrorException } from '@nestjs/common';
+import { Exclude } from 'class-transformer';
 
 @ObjectType()
 @Entity()
@@ -12,6 +13,7 @@ export class User extends BaseModel {
   @Field((_) => String)
   name!: string;
 
+  @Exclude()
   @Column()
   @Field((_) => String)
   password!: string;

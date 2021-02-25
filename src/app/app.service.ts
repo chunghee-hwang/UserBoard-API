@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Board } from 'src/board/board.model';
 import { BoardService } from 'src/board/board.service';
 import { GetBoardsOutput } from 'src/board/dto/get-boards.dto';
 import { User } from 'src/user/user.model';
@@ -22,7 +23,7 @@ export class AppService {
           boards: [],
         };
       }
-      const boards = await this._boardService.findAllByAuthor(user);
+      const boards: Board[] = await this._boardService.findAllByAuthor(user);
       return {
         ok: true,
         ...boards,
@@ -43,13 +44,11 @@ export class AppService {
           boards: null,
         };
       }
-      const boardsOutput: GetBoardsOutput = await this._boardService.findAllByAuthor(
-        user,
-      );
+      const boards: Board[] = await this._boardService.findAllByAuthor(user);
       return {
         ok: true,
         user,
-        boards: boardsOutput.boards,
+        boards,
       };
     } catch (e) {
       return { ok: false, error: 'Fail to search the user or boards.' };

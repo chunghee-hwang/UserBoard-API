@@ -33,13 +33,6 @@ type LoginOutput {
   token: String
 }
 
-type UserOutput {
-  id: ID
-  name: String
-  error: String
-  ok: Boolean
-}
-
 type CreateBoardOutput {
   error: String
   ok: Boolean
@@ -76,26 +69,37 @@ type ModifyBoardOutput {
   author: User
 }
 
+type GetBoardsOutput {
+  error: String
+  ok: Boolean!
+  boards: [Board!]
+}
+
 type SearchUserOutput {
   id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
   name: String
+  password: String
+  boards: Board
 }
 
 type SearchUserOrBoardsOutput {
   error: String
   ok: Boolean!
   user: SearchUserOutput
-  boards: [BoardOutput!]
+  boards: [Board!]
 }
 
 type Query {
-  hello(data: String): String!
   searchUserOrBoards(userId: Float!): SearchUserOrBoardsOutput!
+  getBoards: GetBoardsOutput!
 }
 
 type Mutation {
-  createUser(name: String!, password: String!): UserOutput!
-  deleteUser: UserOutput!
+  createUser(name: String!, password: String!): User!
+  deleteUser: User!
   loginUser(name: String!, password: String!): LoginOutput!
   createBoard(title: String!, content: String!): CreateBoardOutput!
   deleteBoard(id: Float!): DeleteBoardOutput!

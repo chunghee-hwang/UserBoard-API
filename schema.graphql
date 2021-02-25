@@ -33,13 +33,12 @@ type LoginOutput {
   token: String
 }
 
-type UserOutput {
+type UserOutputForResolver {
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
   deletedAt: DateTime
   name: String
-  boards: [Board!]
   error: String
   ok: Boolean
 }
@@ -49,7 +48,7 @@ type Query {
 }
 
 type Mutation {
-  createUser(name: String!, password: String!): UserOutput!
-  deleteUser: UserOutput!
+  createUser(name: String!, password: String!): UserOutputForResolver!
+  deleteUser: UserOutputForResolver!
   loginUser(name: String!, password: String!): LoginOutput!
 }

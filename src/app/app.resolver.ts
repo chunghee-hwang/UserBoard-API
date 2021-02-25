@@ -21,7 +21,9 @@ export class AppResolver {
   // 한 사용자가 만든 모든 게시물 가져오기
   @UseInterceptors(ClassSerializerInterceptor)
   @Query((_) => GetBoardsOutput)
-  async getBoards(userName: string): Promise<GetBoardsOutput> {
+  async getBoards(
+    @Args('userName') userName: string,
+  ): Promise<GetBoardsOutput> {
     return this._appService.getBoardsByUsername(userName);
   }
 }

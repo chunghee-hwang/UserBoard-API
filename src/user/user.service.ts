@@ -35,7 +35,6 @@ export class UserService {
       await this._userRepository.save(createdUser);
       return {
         ...createdUser,
-        password: null,
         ok: true,
       };
     } catch (e) {

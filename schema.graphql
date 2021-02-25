@@ -39,8 +39,7 @@ type UserOutput {
   updatedAt: DateTime
   deletedAt: DateTime
   name: String
-  password: String
-  boards: Board
+  boards: [Board!]
   error: String
   ok: Boolean
 }

@@ -136,21 +136,21 @@ describe('AppController (e2e)', () => {
             });
         });
 
-        it('delete board', () => {
-          return request(app.getHttpServer())
-            .post('/graphql')
-            .set('token', `${user.token}`)
-            .send({
-              query: `mutation {
-                deleteBoard(id:${board.id}){
-                  id }
-                }`,
-            })
-            .expect(200)
-            .expect(({ body }) => {
-              expect(body.data.deleteBoard.id).toBe(board.id);
-            });
-        });
+        // it('delete board', () => {
+        //   return request(app.getHttpServer())
+        //     .post('/graphql')
+        //     .set('token', `${user.token}`)
+        //     .send({
+        //       query: `mutation {
+        //         deleteBoard(id:${board.id}){
+        //           id }
+        //         }`,
+        //     })
+        //     .expect(200)
+        //     .expect(({ body }) => {
+        //       expect(body.data.deleteBoard.id).toBe(board.id);
+        //     });
+        // });
       });
 
       describe('user can view boards', () => {
@@ -158,7 +158,16 @@ describe('AppController (e2e)', () => {
           return request(app.getHttpServer())
             .post('/graphql')
             .send({
-              query: `query {getBoards(userName:"${user.name}"){author {name}}}`,
+              query: `query {
+                getBoards(userName:"${user.name}"){
+                  ok,
+                  boards{
+                    title, content, author{
+                      name
+                    }
+                  }
+                }
+              }`,
             })
             .expect(200)
             .expect(({ body }) => {

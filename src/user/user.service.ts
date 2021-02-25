@@ -11,14 +11,14 @@ import { User } from './user.model';
 export class UserService {
   constructor(
     @InjectRepository(User)
-    private _usersRepository: Repository<User>,
+    private _userRepository: Repository<User>,
     private readonly jwtService: JwtService,
   ) {}
 
   // 계정 생성
   async createUser({ name, password }: CreateUserInput): Promise<UserOutput> {
     try {
-      const sameUser = await this._usersRepository.findOne({
+      const sameUser = await this._userRepository.findOne({
         name,
       });
       if (sameUser) {
@@ -28,11 +28,11 @@ export class UserService {
         };
       }
 
-      const createdUser: User = await this._usersRepository.create({
+      const createdUser: User = await this._userRepository.create({
         name,
         password,
       });
-      await this._usersRepository.save(createdUser);
+      await this._userRepository.save(createdUser);
       return {
         ok: true,
         ...createdUser,
@@ -48,7 +48,7 @@ export class UserService {
   // 로그인
   async loginUser({ name, password }: LoginInput): Promise<LoginOutput> {
     try {
-      const user = await this._usersRepository.findOne({ name });
+      const user = await this._userRepository.findOne({ name });
       if (!user) {
         return { ok: false, error: 'The username or password is not correct.' };
       }
@@ -75,7 +75,7 @@ export class UserService {
         return { ok: false, error: 'The user is not exists.' };
       }
       user.deletedAt = new Date();
-      await this._usersRepository.save(user);
+      await this._userRepository.save(user);
       return {
         ok: true,
         ...user,
@@ -90,6 +90,13 @@ export class UserService {
 
   // 아이디로 유저 정보 찾기
   async findById(id: number): Promise<User> {
-    return await this._usersRepository.findOne({ id, deletedAt: IsNull() });
+    return await this._userRepository.findOne({ id, deletedAt: IsNull() });
+  }
+
+  // 유저 이름으로 유저 정보 찾기
+  async findByName(username: string): Promise<User> {
+    return await this._userRepository.findOne({
+      name: username,
+    });
   }
 }

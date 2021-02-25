@@ -59,7 +59,7 @@ export class UserService {
       if (!isPasswordCorrect) {
         return { ok: false, error: 'The username or password is not correct.' };
       } else {
-        return { ok: true, token: this.jwtService.getToken(user.id) };
+        return { ok: true, token: this.jwtService.getToken(user.id), user };
       }
     } catch (e) {
       return {

@@ -2,6 +2,7 @@
 
 import { ArgsType, Field, ObjectType } from '@nestjs/graphql';
 import { BaseOutput } from 'src/shared/dto/base.output.dto';
+import { UserOutput } from './user-output.dto';
 
 @ArgsType()
 export class LoginInput {
@@ -16,4 +17,7 @@ export class LoginInput {
 export class LoginOutput extends BaseOutput {
   @Field((_) => String, { nullable: true })
   token?: string;
+
+  @Field((_) => UserOutput, { nullable: true })
+  user?: UserOutput;
 }

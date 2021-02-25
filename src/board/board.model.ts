@@ -17,6 +17,9 @@ export class Board extends BaseModel {
   @ManyToOne(
     () => User,
     (user) => user.boards,
+    {
+      eager: true,
+    },
   )
   @Field((_) => User)
   author!: User;

@@ -2,21 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type User {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime
-  name: String!
-  password: String!
-  boards: [Board!]!
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
 type Board {
   id: ID!
   createdAt: DateTime!
@@ -27,10 +12,19 @@ type Board {
   author: User!
 }
 
-type GetBoardsOutput {
-  error: String
-  ok: Boolean!
-  boards: [Board!]
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type User {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  name: String!
+  password: String!
+  boards: [Board!]!
 }
 
 type UserOutput {
@@ -39,6 +33,7 @@ type UserOutput {
   updatedAt: DateTime!
   deletedAt: DateTime
   name: String!
+  boards: [Board!]!
 }
 
 type UserOutputForResolver {
@@ -92,6 +87,48 @@ type ModifyBoardOutput {
   title: String
   content: String
   author: User
+}
+
+type LoginOutput {
+  error: String
+  ok: Boolean!
+  token: String
+}
+
+type CreateBoardOutput {
+  error: String
+  ok: Boolean
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  title: String
+  content: String
+  author: UserOutput
+}
+
+type DeleteBoardOutput {
+  error: String
+  ok: Boolean
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  title: String
+  content: String
+  author: UserOutput
+}
+
+type ModifyBoardOutput {
+  error: String
+  ok: Boolean
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  title: String
+  content: String
+  author: UserOutput
 }
 
 type LoginOutput {

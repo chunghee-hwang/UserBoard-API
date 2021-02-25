@@ -1,10 +1,5 @@
 // 게시판 리졸버
-
-import {
-  ClassSerializerInterceptor,
-  UseGuards,
-  UseInterceptors,
-} from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { AuthUser } from 'src/user/auth/auth-user.decorator';
 import { AuthGuard } from 'src/user/auth/auth.guard';
@@ -19,7 +14,6 @@ export class BoardResolver {
   constructor(private readonly _boardService: BoardService) {}
 
   // 게시물 생성
-  @UseInterceptors(ClassSerializerInterceptor)
   @UseGuards(AuthGuard)
   @Mutation((_) => CreateBoardOutput)
   async createBoard(
@@ -30,7 +24,6 @@ export class BoardResolver {
   }
 
   // 게시물 삭제
-  @UseInterceptors(ClassSerializerInterceptor)
   @UseGuards(AuthGuard)
   @Mutation((_) => DeleteBoardOutput)
   async deleteBoard(
@@ -41,7 +34,6 @@ export class BoardResolver {
   }
 
   // 게시물 수정
-  @UseInterceptors(ClassSerializerInterceptor)
   @UseGuards(AuthGuard)
   @Mutation((_) => ModifyBoardOutput)
   async modifyBoard(

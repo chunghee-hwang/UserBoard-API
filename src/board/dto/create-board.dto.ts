@@ -8,7 +8,7 @@ import {
   PartialType,
 } from '@nestjs/graphql';
 import { BaseOutput } from 'src/shared/dto/base.output.dto';
-import { Board } from '../board.model';
+import { BoardOutput } from './board-output.dto';
 
 @ArgsType()
 export class CreateBoardInput {
@@ -21,5 +21,5 @@ export class CreateBoardInput {
 
 @ObjectType()
 export class CreateBoardOutput extends PartialType(
-  IntersectionType(BaseOutput, Board),
+  IntersectionType(BaseOutput, BoardOutput),
 ) {}

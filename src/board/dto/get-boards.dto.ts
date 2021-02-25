@@ -2,10 +2,10 @@
 
 import { Field, ObjectType } from '@nestjs/graphql';
 import { BaseOutput } from 'src/shared/dto/base.output.dto';
-import { Board } from '../board.model';
 
+import { BoardOutput } from './board-output.dto';
 @ObjectType()
 export class GetBoardsOutput extends BaseOutput {
-  @Field((_) => [Board], { nullable: true })
-  boards?: Board[];
+  @Field((_) => [BoardOutput], { nullable: true })
+  boards?: BoardOutput[];
 }

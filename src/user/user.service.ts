@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Repository } from 'typeorm';
-import { CreateAccountInput } from './dto/create-account.dto';
+import { CreateUserInput } from './dto/create-user.dto';
 import { LoginInput, LoginOutput } from './dto/login-user.dto';
 import { UserOutput } from './dto/user-output.dto';
 import { JwtService } from './jwt/jwt.service';
@@ -11,17 +11,14 @@ import { User } from './user.model';
 export class UserService {
   constructor(
     @InjectRepository(User)
-    private _usersRepository: Repository<User>,
+    private _userRepository: Repository<User>,
     private readonly jwtService: JwtService,
-  ) {
-    console.log('use this repository user', User);
-  }
-  async createAccount({
-    name,
-    password,
-  }: CreateAccountInput): Promise<UserOutput> {
+  ) {}
+
+  // 계정 생성
+  async createUser({ name, password }: CreateUserInput): Promise<UserOutput> {
     try {
-      const sameUser = await this._usersRepository.findOne({
+      const sameUser = await this._userRepository.findOne({
         name,
       });
       if (sameUser) {
@@ -31,11 +28,11 @@ export class UserService {
         };
       }
 
-      const createdUser: User = await this._usersRepository.create({
+      const createdUser: User = await this._userRepository.create({
         name,
         password,
       });
-      await this._usersRepository.save(createdUser);
+      await this._userRepository.save(createdUser);
       return {
         ok: true,
         ...createdUser,
@@ -43,23 +40,24 @@ export class UserService {
     } catch (e) {
       return {
         ok: false,
-        error: 'Fail to create account.',
+        error: 'Fail to create user.',
       };
     }
   }
 
+  // 로그인
   async loginUser({ name, password }: LoginInput): Promise<LoginOutput> {
     try {
-      const account = await this._usersRepository.findOne({ name });
-      if (!account) {
+      const user = await this._userRepository.findOne({ name });
+      if (!user) {
         return { ok: false, error: 'The username or password is not correct.' };
       }
 
-      const isPasswordCorrect: boolean = await account.checkPassword(password);
+      const isPasswordCorrect: boolean = await user.checkPassword(password);
       if (!isPasswordCorrect) {
         return { ok: false, error: 'The username or password is not correct.' };
       } else {
-        return { ok: true, token: this.jwtService.getToken(account.id) };
+        return { ok: true, token: this.jwtService.getToken(user.id) };
       }
     } catch (e) {
       return {
@@ -69,27 +67,36 @@ export class UserService {
     }
   }
 
-  async deleteAccount(userId): Promise<UserOutput> {
+  // 계정 삭제
+  async deleteUser(userId): Promise<UserOutput> {
     try {
-      const account = await this.findById(userId);
-      if (!account) {
+      const user = await this.findById(userId);
+      if (!user) {
         return { ok: false, error: 'The user is not exists.' };
       }
-      account.deletedAt = new Date();
-      await this._usersRepository.save(account);
+      user.deletedAt = new Date();
+      await this._userRepository.save(user);
       return {
         ok: true,
-        ...account,
+        ...user,
       };
     } catch (e) {
       return {
         ok: false,
-        error: 'Fail to delete account.',
+        error: 'Fail to delete user.',
       };
     }
   }
 
+  // 아이디로 유저 정보 찾기
   async findById(id: number): Promise<User> {
-    return await this._usersRepository.findOne({ id, deletedAt: IsNull() });
+    return await this._userRepository.findOne({ id, deletedAt: IsNull() });
+  }
+
+  // 유저 이름으로 유저 정보 찾기
+  async findByName(username: string): Promise<User> {
+    return await this._userRepository.findOne({
+      name: username,
+    });
   }
 }

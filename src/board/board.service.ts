@@ -14,6 +14,7 @@ import { ModifyBoardInput, ModifyBoardOutput } from './dto/modify-board.dto.ts';
 export class BoardService {
   constructor(
     @InjectRepository(Board) private _boardRepository: Repository<Board>,
+    @InjectRepository(User) private _userRepository: Repository<User>,
   ) {}
 
   // 게시물 생성
@@ -87,13 +88,18 @@ export class BoardService {
   }
 
   // 한 사용자가 만든 모든 게시물 가져오기
-  async getBoards(author: User): Promise<GetBoardsOutput> {
+  async getBoards(userName: string): Promise<GetBoardsOutput> {
     try {
+      const user = await this._userRepository.findOne({
+        name: userName,
+      });
+      if (!user) {
+        return { ok: true, boards: [] };
+      }
       const boards = await this._boardRepository.find({
-        author: author,
+        author: user,
         deletedAt: IsNull(),
       });
-      boards.map((board) => (board.author = author));
       return {
         ok: true,
         boards,

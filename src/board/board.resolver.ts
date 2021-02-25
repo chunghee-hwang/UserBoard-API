@@ -1,6 +1,10 @@
 // 게시판 리졸버
 
-import { UseGuards } from '@nestjs/common';
+import {
+  ClassSerializerInterceptor,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
 import { AuthUser } from 'src/user/auth/auth-user.decorator';
 import { AuthGuard } from 'src/user/auth/auth.guard';
@@ -16,6 +20,7 @@ export class BoardResolver {
   constructor(private readonly _boardService: BoardService) {}
 
   // 게시물 생성
+  @UseInterceptors(ClassSerializerInterceptor)
   @UseGuards(AuthGuard)
   @Mutation((_) => CreateBoardOutput)
   async createBoard(
@@ -26,6 +31,7 @@ export class BoardResolver {
   }
 
   // 게시물 삭제
+  @UseInterceptors(ClassSerializerInterceptor)
   @UseGuards(AuthGuard)
   @Mutation((_) => DeleteBoardOutput)
   async deleteBoard(
@@ -36,6 +42,7 @@ export class BoardResolver {
   }
 
   // 게시물 수정
+  @UseInterceptors(ClassSerializerInterceptor)
   @UseGuards(AuthGuard)
   @Mutation((_) => ModifyBoardOutput)
   async modifyBoard(
@@ -46,9 +53,9 @@ export class BoardResolver {
   }
 
   // 한 사용자가 만든 모든 게시물 가져오기
-  @UseGuards(AuthGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
   @Query((_) => GetBoardsOutput)
-  async getBoards(@AuthUser() authUser: User): Promise<GetBoardsOutput> {
-    return this._boardService.getBoards(authUser);
+  async getBoards(userName: string): Promise<GetBoardsOutput> {
+    return this._boardService.getBoards(userName);
   }
 }

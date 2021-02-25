@@ -9,7 +9,6 @@ export class AppResolver {
   constructor(private readonly _appService: AppService) {}
 
   // 유저 아이디로 유저 정보나 유저가 작성한 게시물 검색
-  @UseInterceptors(ClassSerializerInterceptor)
   @Query((_) => SearchUserOrBoardsOutput)
   async searchUserOrBoards(
     @Args('userId')
@@ -19,7 +18,6 @@ export class AppResolver {
   }
 
   // 한 사용자가 만든 모든 게시물 가져오기
-  @UseInterceptors(ClassSerializerInterceptor)
   @Query((_) => GetBoardsOutput)
   async getBoards(
     @Args('userName') userName: string,

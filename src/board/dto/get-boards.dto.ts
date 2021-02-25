@@ -1,12 +1,11 @@
-import { Field, ObjectType, PickType } from '@nestjs/graphql';
+// 여러 게시물 가져오기 dto
+
+import { Field, ObjectType } from '@nestjs/graphql';
 import { BaseOutput } from 'src/shared/dto/base.output.dto';
 import { Board } from '../board.model';
 
 @ObjectType()
-export class BoardOutput extends PickType(Board, ['id', 'title', 'content']) {}
-
-@ObjectType()
 export class GetBoardsOutput extends BaseOutput {
-  @Field((_) => [BoardOutput], { nullable: true })
-  boards?: BoardOutput[];
+  @Field((_) => [Board], { nullable: true })
+  boards?: Board[];
 }

@@ -1,3 +1,5 @@
+// 게시판 서비스
+
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/user.model';
@@ -14,6 +16,7 @@ export class BoardService {
     @InjectRepository(Board) private _boardRepository: Repository<Board>,
   ) {}
 
+  // 게시물 생성
   async createBoard(
     createBoardInput: CreateBoardInput,
     authUser: User,
@@ -32,6 +35,7 @@ export class BoardService {
     }
   }
 
+  // 게시물 삭제
   async deleteBoard(
     { id }: DeleteBoardInput,
     authUser: User,
@@ -56,6 +60,7 @@ export class BoardService {
     }
   }
 
+  // 게시물 수정
   async modifyBoard(
     modifyBoardInput: ModifyBoardInput,
     authUser: User,
@@ -81,19 +86,19 @@ export class BoardService {
     }
   }
 
-  async getBoards(authUser: User): Promise<GetBoardsOutput> {
+  // 사용자가 작성한 모든 게시물 가져오기
+  async findAllByAuthor(user: User): Promise<GetBoardsOutput> {
     try {
       const boards = await this._boardRepository.find({
-        author: authUser,
+        author: user,
         deletedAt: IsNull(),
       });
-      boards.map((board) => (board.author = authUser));
       return {
         ok: true,
         boards,
       };
     } catch (e) {
-      return { ok: false, error: 'Fail to get boards.' };
+      return { ok: false, error: 'Fail to modify the board.' };
     }
   }
 }

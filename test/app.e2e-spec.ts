@@ -5,6 +5,7 @@ import { config } from 'dotenv';
 import { resolve } from 'path';
 import { AppModule } from '../src/app.module';
 import request from 'supertest';
+import { Board } from 'src/board/board.model';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -12,6 +13,7 @@ describe('AppController (e2e)', () => {
     name: 'hakhak',
     password: '1234',
     token: null,
+    id: null,
   };
 
   beforeAll(async () => {
@@ -87,12 +89,13 @@ describe('AppController (e2e)', () => {
       //     });
       // });
 
+      let board = {
+        title: '학학이 소개',
+        content: '학학이는 살아있어요',
+        id: null,
+      };
+
       describe('user can manage boards', () => {
-        let board = {
-          title: '학학이 소개',
-          content: '학학이는 살아있어요',
-          id: null,
-        };
         it('create board', () => {
           return request(app.getHttpServer())
             .post('/graphql')
@@ -115,7 +118,7 @@ describe('AppController (e2e)', () => {
         });
 
         it('modify board', () => {
-          const newBoard = {
+          board = {
             ...board,
             title: '학학이가 수정한 제목',
             content: '학학이가 수정한 내용',
@@ -125,32 +128,16 @@ describe('AppController (e2e)', () => {
             .set('token', `${user.token}`)
             .send({
               query: `mutation {
-                modifyBoard(title: "${newBoard.title}", content:"${newBoard.content}", id:${board.id}){
+                modifyBoard(title: "${board.title}", content:"${board.content}", id:${board.id}){
                   title, content}
                 }`,
             })
             .expect(200)
             .expect(({ body }) => {
-              expect(body.data.modifyBoard.title).toBe(newBoard.title);
-              expect(body.data.modifyBoard.content).toBe(newBoard.content);
+              expect(body.data.modifyBoard.title).toBe(board.title);
+              expect(body.data.modifyBoard.content).toBe(board.content);
             });
         });
-
-        // it('delete board', () => {
-        //   return request(app.getHttpServer())
-        //     .post('/graphql')
-        //     .set('token', `${user.token}`)
-        //     .send({
-        //       query: `mutation {
-        //         deleteBoard(id:${board.id}){
-        //           id }
-        //         }`,
-        //     })
-        //     .expect(200)
-        //     .expect(({ body }) => {
-        //       expect(body.data.deleteBoard.id).toBe(board.id);
-        //     });
-        // });
       });
 
       describe('user can view boards', () => {
@@ -171,9 +158,59 @@ describe('AppController (e2e)', () => {
             })
             .expect(200)
             .expect(({ body }) => {
-              expect(body.data.getBoards).toBe(
-                expect.arrayContaining(['author']),
+              expect(body.data.getBoards.boards).toEqual(
+                expect.arrayContaining([
+                  expect.objectContaining({ author: { name: user.name } }),
+                ]),
               );
+            });
+        });
+
+        it('search user or boards by id', () => {
+          const searchUserId = user.id;
+          return request(app.getHttpServer())
+            .post('/graphql')
+            .send({
+              query: `query {
+                searchUserOrBoards(userId: 25){
+                  user{
+                    name,id
+                  }, boards{
+                    id
+                    title
+                    content
+                  }
+                }
+              }`,
+            })
+            .expect(200)
+            .expect(({ body }) => {
+              expect(body.data.searchUserOrBoards.user).toEqual(
+                expect.objectContaining({ name: user.name }),
+              );
+              expect(body.data.searchUserOrBoards.boards).toEqual(
+                expect.arrayContaining([
+                  expect.objectContaining({ title: board.title }),
+                ]),
+              );
+            });
+        });
+      });
+
+      describe('user can delete board', () => {
+        it('delete board', () => {
+          return request(app.getHttpServer())
+            .post('/graphql')
+            .set('token', `${user.token}`)
+            .send({
+              query: `mutation {
+                deleteBoard(id:${board.id}){
+                  id }
+                }`,
+            })
+            .expect(200)
+            .expect(({ body }) => {
+              expect(body.data.deleteBoard.id).toBe(board.id);
             });
         });
       });

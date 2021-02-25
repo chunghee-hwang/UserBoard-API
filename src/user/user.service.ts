@@ -51,14 +51,10 @@ export class UserService {
   // 로그인
   async loginUser({ name, password }: LoginInput): Promise<LoginOutput> {
     try {
-      const user = await this._userRepository.findOne(
-        { name },
-        { select: ['password'] },
-      );
+      const user = await this._userRepository.findOne({ name });
       if (!user) {
         return { ok: false, error: 'The username or password is not correct.' };
       }
-      console.log({ user });
       const isPasswordCorrect: boolean = await user.checkPassword(password);
       if (!isPasswordCorrect) {
         return { ok: false, error: 'The username or password is not correct.' };

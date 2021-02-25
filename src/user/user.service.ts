@@ -34,8 +34,9 @@ export class UserService {
       });
       await this._userRepository.save(createdUser);
       return {
-        ok: true,
         ...createdUser,
+        password: null,
+        ok: true,
       };
     } catch (e) {
       return {
@@ -48,11 +49,14 @@ export class UserService {
   // 로그인
   async loginUser({ name, password }: LoginInput): Promise<LoginOutput> {
     try {
-      const user = await this._userRepository.findOne({ name });
+      const user = await this._userRepository.findOne(
+        { name },
+        { select: ['password'] },
+      );
       if (!user) {
         return { ok: false, error: 'The username or password is not correct.' };
       }
-
+      console.log({ user });
       const isPasswordCorrect: boolean = await user.checkPassword(password);
       if (!isPasswordCorrect) {
         return { ok: false, error: 'The username or password is not correct.' };
@@ -90,12 +94,12 @@ export class UserService {
 
   // 아이디로 유저 정보 찾기
   async findById(id: number): Promise<User> {
-    return await this._userRepository.findOne({ id, deletedAt: IsNull() });
+    return this._userRepository.findOne({ id, deletedAt: IsNull() });
   }
 
   // 유저 이름으로 유저 정보 찾기
   async findByName(username: string): Promise<User> {
-    return await this._userRepository.findOne({
+    return this._userRepository.findOne({
       name: username,
     });
   }

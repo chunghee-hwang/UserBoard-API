@@ -4,15 +4,17 @@ import {
   NestModule,
   RequestMethod,
 } from '@nestjs/common';
-import { UserModule } from './user/user.module';
-import { BoardModule } from './board/board.module';
-import { BoardService } from './board/board.service';
-import { GraphQLModule, GqlModuleOptions } from '@nestjs/graphql';
+import { GqlModuleOptions, GraphQLModule } from '@nestjs/graphql';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppResolver } from './app/app.resolver';
 import { AppService } from './app/app.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { BoardModule } from './board/board.module';
+import { BoardService } from './board/board.service';
 import { typeormConfig } from './shared/util/typeOrmConfig';
 import { JwtMiddleware } from './user/jwt/jwt.middleware';
+import { JwtModule } from './user/jwt/jwt.module';
+import { UserModule } from './user/user.module';
+import { UserService } from './user/user.service';
 
 @Module({
   imports: [
@@ -53,7 +55,21 @@ import { JwtMiddleware } from './user/jwt/jwt.middleware';
         };
       },
     }),
+
+    // jwt module의 서명키 설정
+    JwtModule.forRoot({
+      privateKey: 'test_private_key',
+    }),
   ],
-  providers: [AppService, BoardService, AppResolver],
+  providers: [AppService, BoardService, AppResolver, UserService],
 })
-export class AppModule {}
+
+// graphql 요청 마다 사용자의 jwt token을 검사
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(JwtMiddleware).forRoutes({
+      path: '/graphql',
+      method: RequestMethod.POST,
+    });
+  }
+}

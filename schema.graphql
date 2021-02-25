@@ -2,21 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Board {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime
-  title: String!
-  content: String!
-  author: User!
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
 type User {
   id: ID!
   createdAt: DateTime!
@@ -27,6 +12,21 @@ type User {
   boards: [Board!]!
 }
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Board {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  title: String!
+  content: String!
+  author: User!
+}
+
 type LoginOutput {
   error: String
   ok: Boolean!
@@ -35,7 +35,12 @@ type LoginOutput {
 
 type UserOutput {
   id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
   name: String
+  password: String
+  boards: Board
   error: String
   ok: Boolean
 }

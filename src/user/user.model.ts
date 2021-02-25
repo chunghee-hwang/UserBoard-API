@@ -4,7 +4,6 @@ import { BaseModel } from '../shared/model/base.model';
 import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { InternalServerErrorException } from '@nestjs/common';
-import { Exclude } from 'class-transformer';
 
 @ObjectType()
 @Entity()
@@ -13,7 +12,6 @@ export class User extends BaseModel {
   @Field((_) => String)
   name!: string;
 
-  @Exclude()
   @Column()
   @Field((_) => String)
   password!: string;
@@ -31,6 +29,7 @@ export class User extends BaseModel {
     try {
       this.password = await bcrypt.hash(this.password, 10);
     } catch (e) {
+      console.log(e);
       throw new InternalServerErrorException();
     }
   }
@@ -39,6 +38,7 @@ export class User extends BaseModel {
     try {
       return await bcrypt.compare(pw, this.password);
     } catch (e) {
+      console.log(e);
       throw new InternalServerErrorException();
     }
   }

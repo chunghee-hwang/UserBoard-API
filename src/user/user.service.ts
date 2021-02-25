@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Repository } from 'typeorm';
 import { CreateUserInput } from './dto/create-user.dto';
 import { LoginInput, LoginOutput } from './dto/login-user.dto';
-import { UserOutput } from './dto/user-output.dto';
+import { UserOutputForResolver } from './dto/user-output.dto';
 import { JwtService } from './jwt/jwt.service';
 import { User } from './user.model';
 
@@ -16,7 +16,10 @@ export class UserService {
   ) {}
 
   // 계정 생성
-  async createUser({ name, password }: CreateUserInput): Promise<UserOutput> {
+  async createUser({
+    name,
+    password,
+  }: CreateUserInput): Promise<UserOutputForResolver> {
     try {
       const sameUser = await this._userRepository.findOne({
         name,
@@ -34,8 +37,8 @@ export class UserService {
       });
       await this._userRepository.save(createdUser);
       return {
-        ok: true,
         ...createdUser,
+        ok: true,
       };
     } catch (e) {
       return {
@@ -48,11 +51,14 @@ export class UserService {
   // 로그인
   async loginUser({ name, password }: LoginInput): Promise<LoginOutput> {
     try {
-      const user = await this._userRepository.findOne({ name });
+      const user = await this._userRepository.findOne(
+        { name },
+        { select: ['password'] },
+      );
       if (!user) {
         return { ok: false, error: 'The username or password is not correct.' };
       }
-
+      console.log({ user });
       const isPasswordCorrect: boolean = await user.checkPassword(password);
       if (!isPasswordCorrect) {
         return { ok: false, error: 'The username or password is not correct.' };
@@ -68,7 +74,7 @@ export class UserService {
   }
 
   // 계정 삭제
-  async deleteUser(userId): Promise<UserOutput> {
+  async deleteUser(userId): Promise<UserOutputForResolver> {
     try {
       const user = await this.findById(userId);
       if (!user) {
@@ -90,12 +96,12 @@ export class UserService {
 
   // 아이디로 유저 정보 찾기
   async findById(id: number): Promise<User> {
-    return await this._userRepository.findOne({ id, deletedAt: IsNull() });
+    return this._userRepository.findOne({ id, deletedAt: IsNull() });
   }
 
   // 유저 이름으로 유저 정보 찾기
   async findByName(username: string): Promise<User> {
-    return await this._userRepository.findOne({
+    return this._userRepository.findOne({
       name: username,
     });
   }

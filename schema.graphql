@@ -27,19 +27,40 @@ type Board {
   author: User!
 }
 
-type LoginOutput {
+type GetBoardsOutput {
   error: String
   ok: Boolean!
-  token: String
+  boards: [Board!]
+}
+
+type UserOutput {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  name: String!
+}
+
+type UserOutputForResolver {
+  id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+  name: String
+  error: String
+  ok: Boolean
+}
+
+type SearchUserOrBoardsOutput {
+  error: String
+  ok: Boolean!
+  user: UserOutput
+  boards: [Board!]
 }
 
 type CreateBoardOutput {
   error: String
   ok: Boolean
-}
-
-type UserOutputForResolver {
-
   id: ID
   createdAt: DateTime
   updatedAt: DateTime
@@ -62,7 +83,6 @@ type DeleteBoardOutput {
 }
 
 type ModifyBoardOutput {
-  name: String
   error: String
   ok: Boolean
   id: ID
@@ -74,27 +94,10 @@ type ModifyBoardOutput {
   author: User
 }
 
-type GetBoardsOutput {
+type LoginOutput {
   error: String
   ok: Boolean!
-  boards: [Board!]
-}
-
-type SearchUserOutput {
-  id: ID
-  createdAt: DateTime
-  updatedAt: DateTime
-  deletedAt: DateTime
-  name: String
-  password: String
-  boards: Board
-}
-
-type SearchUserOrBoardsOutput {
-  error: String
-  ok: Boolean!
-  user: SearchUserOutput
-  boards: [Board!]
+  token: String
 }
 
 type Query {
@@ -103,13 +106,8 @@ type Query {
 }
 
 type Mutation {
-<<<<<<< HEAD
-  createUser(name: String!, password: String!): User!
-  deleteUser: User!
-=======
   createUser(name: String!, password: String!): UserOutputForResolver!
   deleteUser: UserOutputForResolver!
->>>>>>> user
   loginUser(name: String!, password: String!): LoginOutput!
   createBoard(title: String!, content: String!): CreateBoardOutput!
   deleteBoard(id: Float!): DeleteBoardOutput!

@@ -3,15 +3,15 @@
 import { Field, ObjectType, OmitType } from '@nestjs/graphql';
 import { Board } from 'src/board/board.model';
 import { BaseOutput } from 'src/shared/dto/base.output.dto';
-import { UserOutput } from 'src/user/dto/user-output.dto';
-
-@ObjectType()
-export class SearchUserOutput extends OmitType(UserOutput, ['ok', 'error']) {}
+import {
+  UserOutput,
+  UserOutputForResolver,
+} from 'src/user/dto/user-output.dto';
 
 @ObjectType()
 export class SearchUserOrBoardsOutput extends BaseOutput {
-  @Field((_) => SearchUserOutput, { nullable: true })
-  user?: SearchUserOutput;
+  @Field((_) => UserOutput, { nullable: true })
+  user?: UserOutput;
 
   @Field((_) => [Board], { nullable: true })
   boards?: Board[];

@@ -7,6 +7,7 @@ import { IsNull, Repository } from 'typeorm';
 import { Board } from './board.model';
 import { CreateBoardInput, CreateBoardOutput } from './dto/create-board.dto';
 import { DeleteBoardInput, DeleteBoardOutput } from './dto/delete-board.dto';
+import { GetBoardsOutput } from './dto/get-boards.dto';
 import { ModifyBoardInput, ModifyBoardOutput } from './dto/modify-board.dto.ts';
 
 @Injectable()
@@ -79,6 +80,22 @@ export class BoardService {
       return {
         ok: true,
         ...newBoard,
+      };
+    } catch (e) {
+      return { ok: false, error: 'Fail to modify the board.' };
+    }
+  }
+
+  // 사용자가 작성한 모든 게시물 가져오기
+  async findAllByAuthor(user: User): Promise<GetBoardsOutput> {
+    try {
+      const boards = await this._boardRepository.find({
+        author: user,
+        deletedAt: IsNull(),
+      });
+      return {
+        ok: true,
+        boards,
       };
     } catch (e) {
       return { ok: false, error: 'Fail to modify the board.' };

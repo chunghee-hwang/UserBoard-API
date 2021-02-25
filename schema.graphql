@@ -27,17 +27,45 @@ type User {
   boards: [Board!]!
 }
 
-type LoginOutput {
-  error: String
-  ok: Boolean!
-  token: String
+type UserOutput {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  name: String!
 }
 
-type UserOutput {
+type UserOutputForResolver {
   id: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
   name: String
   error: String
   ok: Boolean
+}
+
+type BoardOutput {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  title: String!
+  content: String!
+  author: UserOutput!
+}
+
+type GetBoardsOutput {
+  error: String
+  ok: Boolean!
+  boards: [BoardOutput!]
+}
+
+type SearchUserOrBoardsOutput {
+  error: String
+  ok: Boolean!
+  user: UserOutput
+  boards: [BoardOutput!]
 }
 
 type CreateBoardOutput {
@@ -49,7 +77,7 @@ type CreateBoardOutput {
   deletedAt: DateTime
   title: String
   content: String
-  author: User
+  author: UserOutput
 }
 
 type DeleteBoardOutput {
@@ -61,13 +89,7 @@ type DeleteBoardOutput {
   deletedAt: DateTime
   title: String
   content: String
-  author: User
-}
-
-type GetBoardsOutput {
-  error: String
-  ok: Boolean!
-  boards: [Board!]
+  author: UserOutput
 }
 
 type ModifyBoardOutput {
@@ -79,30 +101,23 @@ type ModifyBoardOutput {
   deletedAt: DateTime
   title: String
   content: String
-  author: User
+  author: UserOutput
 }
 
-type SearchUserOutput {
-  id: ID
-  name: String
-}
-
-type SearchUserOrBoardsOutput {
+type LoginOutput {
   error: String
   ok: Boolean!
-  user: SearchUserOutput
-  boards: [BoardOutput!]
+  token: String
 }
 
 type Query {
-  hello(data: String): String!
   searchUserOrBoards(userId: Float!): SearchUserOrBoardsOutput!
   getBoards: GetBoardsOutput!
 }
 
 type Mutation {
-  createUser(name: String!, password: String!): UserOutput!
-  deleteUser: UserOutput!
+  createUser(name: String!, password: String!): UserOutputForResolver!
+  deleteUser: UserOutputForResolver!
   loginUser(name: String!, password: String!): LoginOutput!
   createBoard(title: String!, content: String!): CreateBoardOutput!
   deleteBoard(id: Float!): DeleteBoardOutput!

@@ -86,20 +86,15 @@ export class BoardService {
     }
   }
 
-  // 한 사용자가 만든 모든 게시물 가져오기
-  async getBoards(author: User): Promise<GetBoardsOutput> {
+  // 사용자가 작성한 모든 게시물 가져오기
+  async findAllByAuthor(user: User): Promise<Board[]> {
     try {
-      const boards = await this._boardRepository.find({
-        author: author,
+      return await this._boardRepository.find({
+        author: user,
         deletedAt: IsNull(),
       });
-      boards.map((board) => (board.author = author));
-      return {
-        ok: true,
-        boards,
-      };
     } catch (e) {
-      return { ok: false, error: 'Fail to get boards.' };
+      return [];
     }
   }
 }

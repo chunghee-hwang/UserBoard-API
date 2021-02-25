@@ -29,6 +29,7 @@ export class User extends BaseModel {
     try {
       this.password = await bcrypt.hash(this.password, 10);
     } catch (e) {
+      console.log(e);
       throw new InternalServerErrorException();
     }
   }
@@ -37,6 +38,7 @@ export class User extends BaseModel {
     try {
       return await bcrypt.compare(pw, this.password);
     } catch (e) {
+      console.log(e);
       throw new InternalServerErrorException();
     }
   }

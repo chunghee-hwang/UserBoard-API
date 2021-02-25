@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Board } from 'src/board/board.model';
 import { BoardService } from 'src/board/board.service';
 import { GetBoardsOutput } from 'src/board/dto/get-boards.dto';
 import { User } from 'src/user/user.model';
@@ -12,6 +13,26 @@ export class AppService {
     private readonly _userService: UserService,
   ) {}
 
+  // 유저 이름으로 유저가 작성한 게시물 모두 검색
+  async getBoardsByUsername(username: string): Promise<GetBoardsOutput> {
+    try {
+      const user: User = await this._userService.findByName(username);
+      if (!user) {
+        return {
+          ok: true,
+          boards: [],
+        };
+      }
+      const boards: Board[] = await this._boardService.findAllByAuthor(user);
+      return {
+        ok: true,
+        ...boards,
+      };
+    } catch (e) {
+      return { ok: false, error: 'Fail to get boards of the user.' };
+    }
+  }
+
   // 유저 아이디로 유저 정보나 유저가 작성한 게시물 검색
   async searchUserOrBoards(userId: number): Promise<SearchUserOrBoardsOutput> {
     try {
@@ -23,16 +44,14 @@ export class AppService {
           boards: null,
         };
       }
-      const boardsOutput: GetBoardsOutput = await this._boardService.getBoards(
-        user,
-      );
+      const boards: Board[] = await this._boardService.findAllByAuthor(user);
       return {
         ok: true,
         user,
-        boards: boardsOutput.boards,
+        boards,
       };
     } catch (e) {
-      return { ok: false, error: 'Fail to search user or boards.' };
+      return { ok: false, error: 'Fail to search the user or boards.' };
     }
   }
 }

@@ -112,7 +112,7 @@ type LoginOutput {
 
 type Query {
   searchUserOrBoards(userId: Float!): SearchUserOrBoardsOutput!
-  getBoards: GetBoardsOutput!
+  getBoards(userName: String!): GetBoardsOutput!
 }
 
 type Mutation {

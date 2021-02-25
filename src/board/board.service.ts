@@ -7,14 +7,12 @@ import { IsNull, Repository } from 'typeorm';
 import { Board } from './board.model';
 import { CreateBoardInput, CreateBoardOutput } from './dto/create-board.dto';
 import { DeleteBoardInput, DeleteBoardOutput } from './dto/delete-board.dto';
-import { GetBoardsOutput } from './dto/get-boards.dto';
 import { ModifyBoardInput, ModifyBoardOutput } from './dto/modify-board.dto.ts';
 
 @Injectable()
 export class BoardService {
   constructor(
     @InjectRepository(Board) private _boardRepository: Repository<Board>,
-    @InjectRepository(User) private _userRepository: Repository<User>,
   ) {}
 
   // 게시물 생성
@@ -84,28 +82,6 @@ export class BoardService {
       };
     } catch (e) {
       return { ok: false, error: 'Fail to modify the board.' };
-    }
-  }
-
-  // 한 사용자가 만든 모든 게시물 가져오기
-  async getBoards(userName: string): Promise<GetBoardsOutput> {
-    try {
-      const user = await this._userRepository.findOne({
-        name: userName,
-      });
-      if (!user) {
-        return { ok: true, boards: [] };
-      }
-      const boards = await this._boardRepository.find({
-        author: user,
-        deletedAt: IsNull(),
-      });
-      return {
-        ok: true,
-        boards,
-      };
-    } catch (e) {
-      return { ok: false, error: 'Fail to get boards.' };
     }
   }
 }

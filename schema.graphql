@@ -71,12 +71,6 @@ type DeleteBoardOutput {
   author: User
 }
 
-type GetBoardsOutput {
-  error: String
-  ok: Boolean!
-  boards: [Board!]
-}
-
 type ModifyBoardOutput {
   error: String
   ok: Boolean
@@ -91,7 +85,6 @@ type ModifyBoardOutput {
 
 type Query {
   hello(data: String): String!
-  getBoards: GetBoardsOutput!
 }
 
 type Mutation {

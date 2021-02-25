@@ -26,7 +26,7 @@ export class AppService {
       const boards: Board[] = await this._boardService.findAllByAuthor(user);
       return {
         ok: true,
-        ...boards,
+        boards,
       };
     } catch (e) {
       return { ok: false, error: 'Fail to get boards of the user.' };
@@ -45,6 +45,7 @@ export class AppService {
         };
       }
       const boards: Board[] = await this._boardService.findAllByAuthor(user);
+      console.log({ boards });
       return {
         ok: true,
         user,

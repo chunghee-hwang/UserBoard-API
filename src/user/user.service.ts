@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Repository } from 'typeorm';
 import { CreateUserInput } from './dto/create-user.dto';
 import { LoginInput, LoginOutput } from './dto/login-user.dto';
-import { UserOutput } from './dto/user-output.dto';
+import { UserOutputForResolver } from './dto/user-output.dto';
 import { JwtService } from './jwt/jwt.service';
 import { User } from './user.model';
 
@@ -16,7 +16,10 @@ export class UserService {
   ) {}
 
   // 계정 생성
-  async createUser({ name, password }: CreateUserInput): Promise<UserOutput> {
+  async createUser({
+    name,
+    password,
+  }: CreateUserInput): Promise<UserOutputForResolver> {
     try {
       const sameUser = await this._userRepository.findOne({
         name,
@@ -71,7 +74,7 @@ export class UserService {
   }
 
   // 계정 삭제
-  async deleteUser(userId): Promise<UserOutput> {
+  async deleteUser(userId): Promise<UserOutputForResolver> {
     try {
       const user = await this.findById(userId);
       if (!user) {
